@@ -8,8 +8,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea"; // or a <textarea> if you don't have this
 
+import { API_BASE } from "@/lib/config";
 
-const API_BASE = "http://localhost:5000/api";
+const res = await fetch(`${API_BASE}/posts`);
 
 const quillModules = {
   toolbar: [

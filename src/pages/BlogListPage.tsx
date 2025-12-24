@@ -3,8 +3,9 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import { API_BASE } from "@/lib/config";
 
-const API_BASE = "http://localhost:5000/api";
+const res = await fetch(`${API_BASE}/posts`);
 
 interface Post {
   _id?: string;

@@ -3,8 +3,9 @@ import { useParams, Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { BedDouble, Bath, MapPin, Building2, Phone } from "lucide-react";
+import { API_BASE } from "@/lib/config";
 
-const API_BASE = "http://localhost:5000/api";
+const res = await fetch(`${API_BASE}/posts`);
 
 interface Property {
   _id: string;

@@ -73,8 +73,9 @@ interface NavigationConfig {
   mobileActions: MobileActions;
   navItems: NavItem[];
 }
+import { API_BASE } from "@/lib/config";
 
-const API_BASE = "http://localhost:5000/api";
+const res = await fetch(`${API_BASE}/posts`);
 
 const AdminNavigationPage: React.FC = () => {
   const navigate = useNavigate();

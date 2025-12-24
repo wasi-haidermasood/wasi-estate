@@ -54,8 +54,9 @@ interface HeroSettings {
   headerButtons: HeroHeaderButtons;
   ctaCard: HeroCtaCard;
 }
+import { API_BASE } from "@/lib/config";
 
-const API_BASE = "http://localhost:5000/api";
+const res = await fetch(`${API_BASE}/posts`);
 
 const AdminHeroPage: React.FC = () => {
   const navigate = useNavigate();

@@ -10,8 +10,9 @@ import {
   Bath,
   Building2,
 } from "lucide-react";
+import { API_BASE } from "@/lib/config";
 
-const API_BASE = "http://localhost:5000/api";
+const res = await fetch(`${API_BASE}/posts`);
 
 interface Property {
   _id: string;
