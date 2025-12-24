@@ -19,8 +19,7 @@ import {
   Crown,
 } from "lucide-react";
 
-const API_BASE = "http://localhost:5000/api";
-
+import { API_BASE } from "@/lib/config";
 // ICON MAP
 const ICON_MAP: Record<string, React.ElementType> = {
   Facebook,

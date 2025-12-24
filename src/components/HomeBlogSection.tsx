@@ -5,8 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { FileText, ArrowRight, Clock } from "lucide-react";
 
-const API_BASE = "http://localhost:5000/api";
-
+import { API_BASE } from "@/lib/config";
 interface Post {
   _id?: string;
   title: string;

@@ -23,8 +23,7 @@ import {
   FaYoutube,
 } from "react-icons/fa";
 
-const API_BASE = "http://localhost:5000/api";
-
+import { API_BASE } from "@/lib/config";
 // ===== TYPE DEFINITIONS =====
 interface NavLink {
   name: string;
