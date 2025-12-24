@@ -6,6 +6,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import { API_BASE } from "@/lib/config";
+
 import {
   Phone,
   MapPin,
@@ -146,7 +148,8 @@ const Contact = () => {
   useEffect(() => {
     const fetchContact = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/contact");
+        const res = await fetch(`${API_BASE}/api/contact`);
+
         const data = await res.json();
 
         if (data?.header) {
@@ -246,7 +249,7 @@ const Contact = () => {
     setIsSubmitting(true);
 
     try {
-      const res = await fetch("http://localhost:5000/api/contact/submit", {
+      const res = await fetch(`${API_BASE}/api/contact/submit`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

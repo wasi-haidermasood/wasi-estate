@@ -75,7 +75,6 @@ interface NavigationConfig {
 }
 import { API_BASE } from "@/lib/config";
 
-const res = await fetch(`${API_BASE}/posts`);
 
 const AdminNavigationPage: React.FC = () => {
   const navigate = useNavigate();

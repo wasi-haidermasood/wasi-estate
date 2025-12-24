@@ -5,7 +5,6 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { API_BASE } from "@/lib/config";
 
-const res = await fetch(`${API_BASE}/posts`);
 interface CmsPage {
   _id?: string;
   title: string;

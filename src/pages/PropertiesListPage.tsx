@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 import { API_BASE } from "@/lib/config";
 
-const res = await fetch(`${API_BASE}/posts`);
 
 interface Property {
   _id: string;

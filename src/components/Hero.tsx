@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 import type { Property } from "@/types/property";
+import { API_BASE } from "@/lib/config";
 
 // ===== TYPES FOR HERO CONFIG =====
 type HeroSlide = {
@@ -106,7 +107,7 @@ const RealEstateHero: React.FC<RealEstateHeroProps> = ({ onSearchResults }) => {
   useEffect(() => {
     const fetchHeroConfig = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/hero");
+        const res = await fetch(`${API_BASE}/api/hero`);
         const data: HeroConfig = await res.json();
         setHeroConfig(data);
       } catch (error) {
@@ -181,7 +182,7 @@ const RealEstateHero: React.FC<RealEstateHeroProps> = ({ onSearchResults }) => {
       });
 
       const res = await fetch(
-        `http://localhost:5000/api/properties?${params.toString()}`
+        `${API_BASE}/api/properties?${params.toString()}`
       );
       const data = await res.json();
 

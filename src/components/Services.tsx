@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { API_BASE } from "@/lib/config";
 import {
   Home,
   Building2,
@@ -26,6 +27,7 @@ import {
   BadgeCheck,
 } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
+
 
 // ===== ICON MAP FOR BACKEND STRINGS =====
 const ICON_MAP: Record<string, React.ElementType> = {
@@ -333,7 +335,7 @@ const Services = () => {
         setServicesLoading(true);
         setServicesError(null);
 
-        const res = await fetch("http://localhost:5000/api/services");
+        const res = await fetch(`${API_BASE}/api/services`);
         const data = await res.json();
 
         // Map main services
@@ -380,7 +382,7 @@ const Services = () => {
     const fetchServicesSettings = async () => {
       try {
         const res = await fetch(
-          "http://localhost:5000/api/services-settings"
+          `${API_BASE}/api/services-settings`
         );
         if (!res.ok) throw new Error("Failed to load services settings");
         const data = await res.json();

@@ -10,7 +10,6 @@ import { Textarea } from "@/components/ui/textarea"; // or a <textarea> if you d
 
 import { API_BASE } from "@/lib/config";
 
-const res = await fetch(`${API_BASE}/posts`);
 
 const quillModules = {
   toolbar: [

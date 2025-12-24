@@ -5,7 +5,6 @@ import Footer from "@/components/Footer";
 import { BedDouble, Bath, MapPin, Building2, Phone } from "lucide-react";
 import { API_BASE } from "@/lib/config";
 
-const res = await fetch(`${API_BASE}/posts`);
 
 interface Property {
   _id: string;

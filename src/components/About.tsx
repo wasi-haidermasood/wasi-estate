@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { API_BASE } from "@/lib/config";
 import {
   Users,
   Target,
@@ -208,7 +209,7 @@ const About = () => {
   useEffect(() => {
     const fetchAbout = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/about");
+        const res = await fetch(`${API_BASE}/api/about`);
         const data: AboutConfig = await res.json();
         setAbout(data);
       } catch (err) {

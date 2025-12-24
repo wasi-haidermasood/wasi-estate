@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Star, MapPin, BadgeCheck } from "lucide-react";
 import { API_BASE } from "@/lib/config";
 
-const res = await fetch(`${API_BASE}/posts`);
+
 interface AdminTestimonial {
   _id: string;          // Mongo ID
   id?: string;          // custom id like t-1

@@ -1,9 +1,9 @@
 "use client";
-
 import { useState, useEffect, useRef } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { API_BASE } from "@/lib/config";
 import {
   Star,
   Quote,
@@ -227,7 +227,7 @@ const Testimonials = () => {
   useEffect(() => {
     const fetchTestimonials = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/testimonials");
+        const res = await fetch(`${API_BASE}/api/testimonials`);
         const data = await res.json();
         if (Array.isArray(data.items)) {
           setTestimonials(data.items);
@@ -280,7 +280,7 @@ const Testimonials = () => {
     try {
       setSubmittingReview(true);
 
-      const res = await fetch("http://localhost:5000/api/testimonials", {
+      const res = await fetch(`${API_BASE}/api/testimonials`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

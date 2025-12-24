@@ -56,7 +56,6 @@ interface HeroSettings {
 }
 import { API_BASE } from "@/lib/config";
 
-const res = await fetch(`${API_BASE}/posts`);
 
 const AdminHeroPage: React.FC = () => {
   const navigate = useNavigate();
