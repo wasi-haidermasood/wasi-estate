@@ -209,7 +209,7 @@ const About = () => {
   useEffect(() => {
     const fetchAbout = async () => {
       try {
-        const res = await fetch(`${API_BASE}/api/about`);
+        const res = await fetch(`${API_BASE}/about`);
         const data: AboutConfig = await res.json();
         setAbout(data);
       } catch (err) {

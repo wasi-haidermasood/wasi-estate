@@ -227,7 +227,7 @@ const Testimonials = () => {
   useEffect(() => {
     const fetchTestimonials = async () => {
       try {
-        const res = await fetch(`${API_BASE}/api/testimonials`);
+        const res = await fetch(`${API_BASE}/testimonials`);
         const data = await res.json();
         if (Array.isArray(data.items)) {
           setTestimonials(data.items);
@@ -280,7 +280,7 @@ const Testimonials = () => {
     try {
       setSubmittingReview(true);
 
-      const res = await fetch(`${API_BASE}/api/testimonials`, {
+      const res = await fetch(`${API_BASE}/testimonials`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

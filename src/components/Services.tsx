@@ -335,7 +335,7 @@ const Services = () => {
         setServicesLoading(true);
         setServicesError(null);
 
-        const res = await fetch(`${API_BASE}/api/services`);
+        const res = await fetch(`${API_BASE}/services`);
         const data = await res.json();
 
         // Map main services
@@ -382,7 +382,7 @@ const Services = () => {
     const fetchServicesSettings = async () => {
       try {
         const res = await fetch(
-          `${API_BASE}/api/services-settings`
+          `${API_BASE}/services-settings`
         );
         if (!res.ok) throw new Error("Failed to load services settings");
         const data = await res.json();

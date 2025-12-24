@@ -107,7 +107,7 @@ const RealEstateHero: React.FC<RealEstateHeroProps> = ({ onSearchResults }) => {
   useEffect(() => {
     const fetchHeroConfig = async () => {
       try {
-        const res = await fetch(`${API_BASE}/api/hero`);
+        const res = await fetch(`${API_BASE}/hero`);
         const data: HeroConfig = await res.json();
         setHeroConfig(data);
       } catch (error) {
@@ -182,7 +182,7 @@ const RealEstateHero: React.FC<RealEstateHeroProps> = ({ onSearchResults }) => {
       });
 
       const res = await fetch(
-        `${API_BASE}/api/properties?${params.toString()}`
+        `${API_BASE}/properties?${params.toString()}`
       );
       const data = await res.json();
 

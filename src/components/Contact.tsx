@@ -148,7 +148,7 @@ const Contact = () => {
   useEffect(() => {
     const fetchContact = async () => {
       try {
-        const res = await fetch(`${API_BASE}/api/contact`);
+        const res = await fetch(`${API_BASE}/contact`);
 
         const data = await res.json();
 
@@ -249,7 +249,7 @@ const Contact = () => {
     setIsSubmitting(true);
 
     try {
-      const res = await fetch(`${API_BASE}/api/contact/submit`, {
+      const res = await fetch(`${API_BASE}/contact/submit`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
