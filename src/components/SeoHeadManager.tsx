@@ -1,5 +1,7 @@
 // src/components/SeoHeadManager.tsx
 import { useEffect, useState } from "react";
+import { API_BASE } from "@/lib/config";
+
 
 interface SeoMetaConfig {
   title?: string;
@@ -31,7 +33,6 @@ interface SeoSettings {
   structuredData?: string;
 }
 
-import { API_BASE } from "@/lib/config";
 
 function upsertMetaTag(name: string, content: string | undefined) {
   if (!content) return;

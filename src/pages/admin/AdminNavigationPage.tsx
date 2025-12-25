@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { API_BASE } from "@/lib/config";
+
 
 // ----- Types matching your NavigationConfig schema -----
 interface SocialLink {
@@ -73,7 +75,6 @@ interface NavigationConfig {
   mobileActions: MobileActions;
   navItems: NavItem[];
 }
-import { API_BASE } from "@/lib/config";
 
 
 const AdminNavigationPage: React.FC = () => {

@@ -22,7 +22,6 @@ import {
   FaLinkedinIn,
   FaYoutube,
 } from "react-icons/fa";
-
 import { API_BASE } from "@/lib/config";
 // ===== TYPE DEFINITIONS =====
 interface NavLink {

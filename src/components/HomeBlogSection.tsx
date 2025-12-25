@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { FileText, ArrowRight, Clock } from "lucide-react";
-
 import { API_BASE } from "@/lib/config";
 interface Post {
   _id?: string;

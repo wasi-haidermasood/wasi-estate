@@ -2,6 +2,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { API_BASE } from "@/lib/config";
+
 import {
   LayoutDashboard,
   Menu,
@@ -128,7 +130,6 @@ const MODULES: AdminModule[] = [
   },
 ];
 
-import { API_BASE } from "@/lib/config";
 
 const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();

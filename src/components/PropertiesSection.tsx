@@ -9,6 +9,8 @@ import {
   Building2,
 } from "lucide-react";
 import type { Property } from "@/types/property";
+import { API_BASE } from "@/lib/config";
+
 
 interface PropertiesSectionProps {
   properties?: Property[]; // passed from search, optional
@@ -54,7 +56,6 @@ const fallbackProperties: Property[] = [
   },
 ];
 
-import { API_BASE } from "@/lib/config";
 
 function formatPKR(amount: number): string {
   if (!amount && amount !== 0) return "";

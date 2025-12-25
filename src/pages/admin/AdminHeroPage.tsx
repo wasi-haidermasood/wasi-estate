@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { API_BASE } from "@/lib/config";
+
 import { Label } from "@/components/ui/label";
 // If you have a Textarea component, use it; otherwise, use <textarea>
 import { Textarea } from "@/components/ui/textarea"; // or replace with a normal <textarea>
@@ -54,7 +56,6 @@ interface HeroSettings {
   headerButtons: HeroHeaderButtons;
   ctaCard: HeroCtaCard;
 }
-import { API_BASE } from "@/lib/config";
 
 
 const AdminHeroPage: React.FC = () => {
