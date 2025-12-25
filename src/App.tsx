@@ -28,6 +28,8 @@ import AdminPagesPage from "@/pages/admin/AdminPagesPage";
 import StaticPage from "@/pages/StaticPage";
 import AdminSiteSettingsPage from "@/pages/admin/AdminSiteSettingsPage";
 import { SpeedInsights } from "@vercel/speed-insights/react"
+import ScrollToTop from './components/ScrollToTop';
+
 
 
 
@@ -41,6 +43,7 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
+      <ScrollToTop />
       <SpeedInsights />
       <Toaster />
       <Sonner />
