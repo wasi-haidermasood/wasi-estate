@@ -27,6 +27,7 @@ import AdminServicesSettingsPage from "@/pages/admin/AdminServicesSettingsPage";
 import AdminPagesPage from "@/pages/admin/AdminPagesPage";
 import StaticPage from "@/pages/StaticPage";
 import AdminSiteSettingsPage from "@/pages/admin/AdminSiteSettingsPage";
+import { SpeedInsights } from "@vercel/speed-insights/react"
 
 
 
@@ -40,6 +41,7 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
+      <SpeedInsights />
       <Toaster />
       <Sonner />
       <SeoHeadManager />
