@@ -27,28 +27,23 @@ import AdminServicesSettingsPage from "@/pages/admin/AdminServicesSettingsPage";
 import AdminPagesPage from "@/pages/admin/AdminPagesPage";
 import StaticPage from "@/pages/StaticPage";
 import AdminSiteSettingsPage from "@/pages/admin/AdminSiteSettingsPage";
-import { SpeedInsights } from "@vercel/speed-insights/react"
-import ScrollToTop from './components/ScrollToTop';
-
-
-
-
-
-
-
-
+import { SpeedInsights } from "@vercel/speed-insights/react";
+import ScrollToTop from "./components/ScrollToTop";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <ScrollToTop />
-      <SpeedInsights />
-      <Toaster />
-      <Sonner />
-      <SeoHeadManager />
       <BrowserRouter>
+        {/* MUST be inside BrowserRouter */}
+        <ScrollToTop />
+
+        <SpeedInsights />
+        <Toaster />
+        <Sonner />
+        <SeoHeadManager />
+
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/admin/login" element={<AdminLogin />} />
@@ -70,9 +65,10 @@ const App = () => (
           <Route path="/properties/:id" element={<PropertyDetailPage />} />
           <Route path="/admin/services-settings" element={<AdminServicesSettingsPage />} />
           <Route path="/admin/pages" element={<AdminPagesPage />} />
+          <Route path="/admin/site" element={<AdminSiteSettingsPage />} />
           <Route path="/:slug" element={<StaticPage />} />
-      <Route path="/admin/site" element={<AdminSiteSettingsPage />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+
+          {/* keep catch-all last */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
