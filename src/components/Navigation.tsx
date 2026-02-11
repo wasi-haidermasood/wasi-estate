@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   Menu,
@@ -23,6 +23,7 @@ import {
   FaYoutube,
 } from "react-icons/fa";
 import { API_BASE } from "@/lib/config";
+
 // ===== TYPE DEFINITIONS =====
 interface NavLink {
   name: string;
@@ -182,130 +183,10 @@ const SOCIAL_ICON_MAP: Record<string, JSX.Element> = {
 // Default navbar items (fallback if API fails)
 const DEFAULT_NAV_ITEMS: NavItem[] = [
   { name: "Home", href: "#home" },
-  {
-    name: "Buy",
-    href: "#properties",
-    hasDropdown: true,
-    megaMenu: [
-      {
-        title: "Property Types",
-        items: [
-          {
-            name: "Houses & Villas",
-            href: "#houses",
-            icon: <Home className="w-4 h-4" />,
-            desc: "Luxury family homes",
-          },
-          {
-            name: "Apartments",
-            href: "#apartments",
-            icon: <Building2 className="w-4 h-4" />,
-            desc: "Modern living spaces",
-          },
-          {
-            name: "Commercial",
-            href: "#commercial",
-            icon: <Briefcase className="w-4 h-4" />,
-            desc: "Office & retail",
-          },
-          {
-            name: "Plots & Land",
-            href: "#plots",
-            icon: <MapPin className="w-4 h-4" />,
-            desc: "Investment plots",
-          },
-        ],
-      },
-      {
-        title: "Top Locations",
-        items: [
-          { name: "DHA Lahore", href: "#dha" },
-          { name: "Bahria Town", href: "#bahria" },
-          { name: "Gulberg", href: "#gulberg" },
-          { name: "Model Town", href: "#model-town" },
-        ],
-      },
-      {
-        title: "Featured Project",
-        isHighlight: true,
-        image:
-          "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-        titleText: "Smart City Apartments",
-        price: "Starting 85 Lac",
-      },
-    ],
-  },
-  {
-    name: "Rent",
-    href: "#rent",
-    hasDropdown: true,
-    megaMenu: [
-      {
-        title: "Rental Options",
-        items: [
-          {
-            name: "Houses for Rent",
-            href: "#rent-house",
-            icon: <Key className="w-4 h-4" />,
-            desc: "Family homes",
-          },
-          {
-            name: "Apartments for Rent",
-            href: "#rent-flat",
-            icon: <Building2 className="w-4 h-4" />,
-            desc: "1-4 bed units",
-          },
-          {
-            name: "Office Spaces",
-            href: "#rent-office",
-            icon: <Briefcase className="w-4 h-4" />,
-            desc: "Commercial rental",
-          },
-        ],
-      },
-      {
-        title: "Rental Services",
-        items: [
-          { name: "Property Management", href: "#management" },
-          { name: "Tenant Screening", href: "#screening" },
-          { name: "Lease Agreements", href: "#lease" },
-        ],
-      },
-    ],
-  },
-  {
-    name: "Services",
-    href: "#services",
-    hasDropdown: true,
-    megaMenu: [
-      {
-        title: "Our Services",
-        items: [
-          {
-            name: "Property Valuation",
-            href: "#valuation",
-            icon: <Building2 className="w-4 h-4" />,
-          },
-          {
-            name: "Home Construction",
-            href: "#construction",
-            icon: <Hammer className="w-4 h-4" />,
-          },
-          {
-            name: "Interior Design",
-            href: "#interior",
-            icon: <Home className="w-4 h-4" />,
-          },
-          {
-            name: "Legal Consultation",
-            href: "#legal",
-            icon: <Briefcase className="w-4 h-4" />,
-          },
-        ],
-      },
-    ],
-  },
+  { name: "Properties", href: "/properties" },
+  { name: "Services", href: "#services" },
   { name: "About", href: "#about" },
+  { name: "Blog", href: "/blog" },
   { name: "Contact", href: "#contact" },
 ];
 
@@ -328,6 +209,9 @@ const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const navRef = useRef<HTMLElement>(null);
+
+  const navigate = useNavigate();
+  const location = useLocation();
 
   // Dynamic state from API
   const [navItems, setNavItems] = useState<NavItem[]>(DEFAULT_NAV_ITEMS);
@@ -372,6 +256,61 @@ const Navigation = () => {
   const navPages = pageLinks
     .filter((p) => p.showInNav)
     .sort((a, b) => (a.navOrder || 0) - (b.navOrder || 0));
+
+  // === SMART NAVIGATION HANDLER ===
+  const handleNavClick = (href: string) => {
+    if (!href) return;
+
+    // Close menus
+    setIsOpen(false);
+    setActiveDropdown(null);
+
+    // 1) External URLs or tel/mailto
+    if (
+      href.startsWith("http://") ||
+      href.startsWith("https://") ||
+      href.startsWith("mailto:") ||
+      href.startsWith("tel:")
+    ) {
+      window.location.href = href;
+      return;
+    }
+
+    // 2) In-page section (anchors: #home, #about, #contact, etc.)
+    if (href.startsWith("#")) {
+      if (location.pathname === "/") {
+        const el = document.querySelector(href);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth" });
+        }
+      } else {
+        // Go to home with hash, e.g. "/#contact"
+        navigate("/" + href);
+      }
+      return;
+    }
+
+    // 3) Internal route (e.g. "/properties", "/blog", "/pages/faq")
+    navigate(href);
+  };
+
+  const getHighlightSection = (
+    megaMenu: MegaMenuItem[] | undefined
+  ): HighlightSection | undefined => {
+    return megaMenu?.find(isHighlightSection);
+  };
+
+  const getRegularSections = (
+    megaMenu: MegaMenuItem[] | undefined
+  ): MenuSection[] => {
+    return (
+      megaMenu?.filter(
+        (section): section is MenuSection => !isHighlightSection(section)
+      ) || []
+    );
+  };
+
+  const LogoIcon = logoIcon;
 
   // Fetch navigation config
   useEffect(() => {
@@ -583,33 +522,6 @@ const Navigation = () => {
     return () => document.removeEventListener("keydown", handleEscape);
   }, []);
 
-  const scrollToSection = (href: string) => {
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
-    setIsOpen(false);
-    setActiveDropdown(null);
-  };
-
-  const getHighlightSection = (
-    megaMenu: MegaMenuItem[] | undefined
-  ): HighlightSection | undefined => {
-    return megaMenu?.find(isHighlightSection);
-  };
-
-  const getRegularSections = (
-    megaMenu: MegaMenuItem[] | undefined
-  ): MenuSection[] => {
-    return (
-      megaMenu?.filter(
-        (section): section is MenuSection => !isHighlightSection(section)
-      ) || []
-    );
-  };
-
-  const LogoIcon = logoIcon;
-
   return (
     <>
       {/* ===== FIXED HEADER ===== */}
@@ -682,10 +594,10 @@ const Navigation = () => {
             <div className="flex items-center justify-between">
               {/* Logo */}
               <a
-                href="#home"
+                href="/"
                 onClick={(e) => {
                   e.preventDefault();
-                  scrollToSection("#home");
+                  handleNavClick("/");
                 }}
                 className="flex items-center gap-2.5 group z-50 relative"
               >
@@ -739,9 +651,12 @@ const Navigation = () => {
                       onMouseLeave={() => setActiveDropdown(null)}
                     >
                       <button
-                        onClick={() =>
-                          !item.hasDropdown && scrollToSection(item.href)
-                        }
+                        type="button"
+                        onClick={() => {
+                          if (!item.hasDropdown) {
+                            handleNavClick(item.href);
+                          }
+                        }}
                         className={`px-4 py-2.5 text-sm font-semibold flex items-center gap-1 transition-all rounded-lg ${
                           activeDropdown === item.name
                             ? "text-green-600 bg-green-50"
@@ -802,7 +717,7 @@ const Navigation = () => {
                                                   href={link.href}
                                                   onClick={(e) => {
                                                     e.preventDefault();
-                                                    scrollToSection(link.href);
+                                                    handleNavClick(link.href);
                                                   }}
                                                   className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors group"
                                                 >
@@ -894,7 +809,7 @@ const Navigation = () => {
                   </span>
                 </a>
                 <Button
-                  onClick={() => scrollToSection(desktopCtaHref)}
+                  onClick={() => handleNavClick(desktopCtaHref)}
                   className="bg-gradient-to-r from-slate-800 to-slate-900 hover:from-green-600 hover:to-green-700 text-white font-bold px-6 py-2.5 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
                 >
                   {desktopCtaLabel}
@@ -990,7 +905,7 @@ const Navigation = () => {
                               activeDropdown === item.name ? null : item.name
                             );
                           } else {
-                            scrollToSection(item.href);
+                            handleNavClick(item.href);
                           }
                         }}
                         className="w-full flex items-center justify-between py-3.5 text-base font-semibold text-slate-800"
@@ -1038,7 +953,7 @@ const Navigation = () => {
                                       href={link.href}
                                       onClick={(e) => {
                                         e.preventDefault();
-                                        scrollToSection(link.href);
+                                        handleNavClick(link.href);
                                       }}
                                       className="flex items-center gap-3 p-2 rounded-lg active:bg-white transition-colors"
                                     >
@@ -1086,7 +1001,7 @@ const Navigation = () => {
             {/* Sticky Bottom Actions */}
             <div className="p-4 bg-white border-t border-gray-200 shadow-[0_-10px_30px_rgba(0,0,0,0.05)] space-y-3">
               <Button
-                onClick={() => scrollToSection("#contact")}
+                onClick={() => handleNavClick("#contact")}
                 className="w-full bg-gradient-to-r from-slate-800 to-slate-900 hover:from-green-600 hover:to-green-700 text-white font-bold h-12 text-base rounded-xl shadow-lg transition-all"
               >
                 List Your Property
