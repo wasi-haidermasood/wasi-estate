@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { FileText, ArrowRight, Clock } from "lucide-react";
 import { API_BASE } from "@/lib/config";
+
 interface Post {
   _id?: string;
   title: string;
@@ -58,9 +59,37 @@ const HomeBlogSection: React.FC = () => {
     return null;
   }
 
+  // Use the first post (latest) as hero source
+  const heroPost = posts[0];
+
   return (
     <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-b from-white via-slate-50/60 to-white">
       <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
+        {/* HERO IMAGE for blog section, using latest post coverImage */}
+        {heroPost.coverImage && (
+          <div className="mb-6 sm:mb-8 rounded-2xl overflow-hidden relative h-40 sm:h-52 lg:h-60">
+            <img
+              src={heroPost.coverImage}
+              alt={heroPost.title}
+              className="w-full h-full object-cover"
+              loading="lazy"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-black/10" />
+            <div className="absolute inset-0 flex flex-col justify-center px-5 sm:px-8 lg:px-10">
+              <p className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.16em] text-blue-200 mb-1">
+                From Our Blog
+              </p>
+              <h2 className="text-lg sm:text-2xl lg:text-3xl font-bold text-white max-w-xl line-clamp-2">
+                {heroPost.title}
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-200 mt-1 max-w-lg line-clamp-2">
+                This hero image is controlled by the cover image of your latest
+                published blog post in the Blog CMS.
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-3 mb-6 sm:mb-8">
           <div>
@@ -70,9 +99,9 @@ const HomeBlogSection: React.FC = () => {
                 From Our Blog
               </span>
             </div>
-            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-900">
+            <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-900">
               Latest Insights &amp; Guides
-            </h2>
+            </h3>
             <p className="text-xs sm:text-sm text-slate-500 max-w-md mt-1">
               Tips, market updates and guides from Wasi Estate &amp; Builders to
               help you make better property decisions.

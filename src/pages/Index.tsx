@@ -23,10 +23,10 @@ function Index() {
           <Hero onSearchResults={setSearchResults} />
         </section>
 
-        {/* Services */}
+        {/* Services
         <section id="services">
           <Services />
-        </section>
+        </section> */}
 
         {/* Properties */}
         <section id="properties">

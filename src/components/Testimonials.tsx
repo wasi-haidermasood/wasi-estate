@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -46,7 +46,7 @@ interface Stat {
   icon: React.ElementType;
 }
 
-// ===== DEFAULT TESTIMONIALS =====
+// ===== DEFAULT TESTIMONIALS (Lahore‑focused placeholders) =====
 const DEFAULT_TESTIMONIALS: Testimonial[] = [
   {
     id: 1,
@@ -59,21 +59,21 @@ const DEFAULT_TESTIMONIALS: Testimonial[] = [
     results: "Dream Home Found",
     propertyType: "Residential Purchase",
     image:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80",
     featured: true,
   },
   {
     id: 2,
     name: "Fatima Malik",
     role: "Property Seller",
-    location: "Bahria Town, Islamabad",
+    location: "Bahria Town, Lahore",
     avatar: "FM",
     rating: 5,
     text: "Sold my property in just 3 weeks! The team was professional, transparent, and got me the best price. Their marketing strategy brought serious buyers quickly. Worth every penny of the 1% commission.",
     results: "Sold in 3 Weeks",
     propertyType: "Quick Sale",
     image:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80",
     featured: true,
   },
   {
@@ -87,7 +87,7 @@ const DEFAULT_TESTIMONIALS: Testimonial[] = [
     results: "Perfect Home Built",
     propertyType: "House Construction",
     image:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80",
     isVideo: true,
     videoUrl: "#",
     featured: true,
@@ -103,21 +103,21 @@ const DEFAULT_TESTIMONIALS: Testimonial[] = [
     results: "Modern Transformation",
     propertyType: "Complete Renovation",
     image:
-      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=200&q=80",
     featured: false,
   },
   {
     id: 5,
     name: "Ali Raza",
     role: "Commercial Buyer",
-    location: "Main Boulevard, Gulberg",
+    location: "Main Boulevard, Gulberg, Lahore",
     avatar: "AR",
     rating: 5,
     text: "Purchased a commercial plaza through Wasi Estate. Their market knowledge and negotiation skills saved me lakhs! Complete legal verification and smooth transaction. Best real estate consultants in Lahore.",
     results: "Best Deal Secured",
     propertyType: "Commercial Purchase",
     image:
-      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80",
     featured: false,
   },
   {
@@ -131,7 +131,7 @@ const DEFAULT_TESTIMONIALS: Testimonial[] = [
     results: "Perfect Rental Found",
     propertyType: "Apartment Rental",
     image:
-      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80",
+      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
     featured: false,
   },
 ];
@@ -140,12 +140,13 @@ const stats: Stat[] = [
   { value: 350, suffix: "+", label: "Happy Clients", icon: Users },
   { value: 500, suffix: "+", label: "Properties Sold", icon: Building2 },
   { value: 98, suffix: "%", label: "Satisfaction Rate", icon: ThumbsUp },
-  { value: 10, suffix: "+", label: "Years Experience", icon: Award },
+  { value: 20, suffix: "+", label: "Years in Lahore Market", icon: Award },
 ];
 
-// ===== STAT CARD COMPONENT (hook called inside component) =====
-const StatCard = ({ stat, isVisible }: { stat: Stat; isVisible: boolean }) => {
-  const count = useCounter(stat.value, isVisible, 2000);
+// ===== STAT CARD COMPONENT =====
+const StatCard = ({ stat }: { stat: Stat; isVisible?: boolean }) => {
+  // always animate when rendered (no IntersectionObserver)
+  const count = useCounter(stat.value, true, 1500);
 
   return (
     <div className="bg-white rounded-2xl p-6 lg:p-8 shadow-lg border border-slate-100 text-center group hover:shadow-xl hover:border-green-200 hover:-translate-y-1 transition-all duration-300">
@@ -164,7 +165,7 @@ const StatCard = ({ stat, isVisible }: { stat: Stat; isVisible: boolean }) => {
 // ===== STAR RATING COMPONENT =====
 const StarRating = ({ rating }: { rating: number }) => (
   <div className="flex items-center gap-0.5">
-    {[...Array(5)].map((_, i) => (
+    {Array.from({ length: 5 }).map((_, i) => (
       <Star
         key={i}
         className={`h-4 w-4 ${
@@ -179,9 +180,7 @@ const StarRating = ({ rating }: { rating: number }) => (
 const Testimonials = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-  const [isVisible, setIsVisible] = useState(false);
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
-  const sectionRef = useRef<HTMLElement>(null);
 
   // Testimonials state
   const [testimonials, setTestimonials] =
@@ -210,26 +209,13 @@ const Testimonials = () => {
   const activeTestimonial =
     featuredCount > 0 ? featuredList[activeIndex % featuredCount] : undefined;
 
-  // Intersection Observer for animations
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) setIsVisible(true);
-      },
-      { threshold: 0.1 }
-    );
-
-    if (sectionRef.current) observer.observe(sectionRef.current);
-    return () => observer.disconnect();
-  }, []);
-
   // Fetch testimonials from backend
   useEffect(() => {
     const fetchTestimonials = async () => {
       try {
         const res = await fetch(`${API_BASE}/testimonials`);
         const data = await res.json();
-        if (Array.isArray(data.items)) {
+        if (Array.isArray(data.items) && data.items.length > 0) {
           setTestimonials(data.items);
         }
       } catch (err) {
@@ -298,7 +284,7 @@ const Testimonials = () => {
         throw new Error("Failed to submit review");
       }
 
-      await res.json(); // we don't append pending review to the public list
+      await res.json(); // backend stores it; we don't append immediately
 
       setNewReview({
         name: "",
@@ -321,9 +307,10 @@ const Testimonials = () => {
     }
   };
 
+  if (!activeTestimonial) return null;
+
   return (
     <section
-      ref={sectionRef}
       id="testimonials"
       className="py-16 lg:py-24 bg-gradient-to-b from-white via-slate-50 to-white relative overflow-hidden"
     >
@@ -335,15 +322,11 @@ const Testimonials = () => {
 
       <div className="container mx-auto px-4 relative z-10">
         {/* HEADER */}
-        <div
-          className={`text-center mb-12 lg:mb-16 transition-all duration-1000 ${
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-          }`}
-        >
+        <div className="text-center mb-12 lg:mb-16">
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-yellow-100 to-amber-100 px-5 py-2 rounded-full mb-6 border border-yellow-200">
             <Star className="w-4 h-4 text-yellow-600 fill-yellow-600" />
             <span className="text-sm font-bold text-yellow-800 uppercase tracking-wider">
-              Client Stories
+              Client Stories from Lahore
             </span>
           </div>
 
@@ -375,29 +358,20 @@ const Testimonials = () => {
           </h2>
 
           <p className="text-lg lg:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
-            Real stories from real clients across Pakistan. See how we&apos;ve
-            helped them achieve their property dreams with transparency and
-            expertise.
+            Real stories from buyers, sellers and investors across Lahore who
+            trusted Wasi Estate &amp; Builders with their property decisions.
           </p>
         </div>
 
-        {/* STATS - Using StatCard component */}
-        <div
-          className={`grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-16 transition-all duration-1000 delay-200 ${
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-          }`}
-        >
+        {/* STATS */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-16">
           {stats.map((stat, index) => (
-            <StatCard key={index} stat={stat} isVisible={isVisible} />
+            <StatCard key={index} stat={stat} />
           ))}
         </div>
 
         {/* FEATURED TESTIMONIAL */}
-        <div
-          className={`mb-16 transition-all duration-1000 delay-300 ${
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-          }`}
-        >
+        <div className="mb-16">
           <div
             className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-3xl overflow-hidden"
             onMouseEnter={() => setIsAutoPlaying(false)}
@@ -414,54 +388,52 @@ const Testimonials = () => {
                 <div className="text-white">
                   <Quote className="w-12 h-12 text-green-400 mb-6 opacity-50" />
                   <p className="text-xl lg:text-2xl font-medium leading-relaxed mb-8">
-                    {activeTestimonial && `"${activeTestimonial.text}"`}
+                    "{activeTestimonial.text}"
                   </p>
 
                   <div className="inline-flex items-center gap-3 bg-green-500/20 backdrop-blur-sm border border-green-500/30 rounded-full px-5 py-2 mb-8">
                     <BadgeCheck className="w-5 h-5 text-green-400" />
                     <span className="text-green-300 font-semibold">
-                      {activeTestimonial?.results}
+                      {activeTestimonial.results}
                     </span>
                     <span className="text-slate-400">•</span>
                     <span className="text-slate-400 text-sm">
-                      {activeTestimonial?.propertyType}
+                      {activeTestimonial.propertyType}
                     </span>
                   </div>
 
-                  {activeTestimonial && (
-                    <div className="flex items-center gap-4">
-                      <Avatar className="h-14 w-14 ring-4 ring-green-500/30">
-                        <AvatarImage
-                          src={activeTestimonial.image}
-                          alt={activeTestimonial.name}
-                        />
-                        <AvatarFallback className="bg-gradient-to-br from-green-500 to-emerald-500 text-white font-bold text-lg">
-                          {activeTestimonial.avatar}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <h4 className="text-lg font-bold text-white">
-                          {activeTestimonial.name}
-                        </h4>
-                        <p className="text-slate-400 text-sm">
-                          {activeTestimonial.role}
-                        </p>
-                        <div className="flex items-center gap-1 mt-1 text-slate-400 text-xs">
-                          <MapPin className="w-3 h-3 text-green-400" />
-                          {activeTestimonial.location}
-                        </div>
+                  <div className="flex items-center gap-4">
+                    <Avatar className="h-14 w-14 ring-4 ring-green-500/30">
+                      <AvatarImage
+                        src={activeTestimonial.image}
+                        alt={activeTestimonial.name}
+                      />
+                      <AvatarFallback className="bg-gradient-to-br from-green-500 to-emerald-500 text-white font-bold text-lg">
+                        {activeTestimonial.avatar}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <h4 className="text-lg font-bold text-white">
+                        {activeTestimonial.name}
+                      </h4>
+                      <p className="text-slate-400 text-sm">
+                        {activeTestimonial.role}
+                      </p>
+                      <div className="flex items-center gap-1 mt-1 text-slate-400 text-xs">
+                        <MapPin className="w-3 h-3 text-green-400" />
+                        {activeTestimonial.location}
                       </div>
                     </div>
-                  )}
+                  </div>
                 </div>
 
                 {/* Right */}
                 <div className="space-y-6">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <StarRating rating={activeTestimonial?.rating || 5} />
+                      <StarRating rating={activeTestimonial.rating || 5} />
                       <span className="text-white font-bold ml-2">
-                        {activeTestimonial?.rating?.toFixed(1) ?? "5.0"}
+                        {activeTestimonial.rating?.toFixed(1) ?? "5.0"}
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
@@ -491,7 +463,7 @@ const Testimonials = () => {
                           setIsAutoPlaying(false);
                         }}
                         className={`relative rounded-xl overflow-hidden transition-all duration-300 ${
-                          activeTestimonial?.id === testimonial.id
+                          activeTestimonial.id === testimonial.id
                             ? "ring-4 ring-green-500 scale-105 shadow-lg"
                             : "opacity-50 hover:opacity-80 hover:scale-105"
                         }`}
@@ -506,7 +478,7 @@ const Testimonials = () => {
                             <Play className="w-6 h-6 text-white fill-white" />
                           </div>
                         )}
-                        {activeTestimonial?.id === testimonial.id && (
+                        {activeTestimonial.id === testimonial.id && (
                           <div className="absolute inset-0 bg-green-500/20" />
                         )}
                       </button>
@@ -541,12 +513,8 @@ const Testimonials = () => {
           {testimonials.map((testimonial, index) => (
             <Card
               key={testimonial.id}
-              className={`group hover:-translate-y-2 transition-all duration-500 border-0 bg-white shadow-lg hover:shadow-2xl rounded-2xl overflow-hidden ${
-                isVisible
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-10"
-              }`}
-              style={{ transitionDelay: `${400 + index * 100}ms` }}
+              className="group hover:-translate-y-2 transition-all duration-500 border-0 bg-white shadow-lg hover:shadow-2xl rounded-2xl overflow-hidden"
+              style={{ transitionDelay: `${index * 50}ms` }}
               onMouseEnter={() => setHoveredCard(Number(testimonial.id))}
               onMouseLeave={() => setHoveredCard(null)}
             >
@@ -620,12 +588,8 @@ const Testimonials = () => {
           ))}
         </div>
 
-        {/* ADD YOUR REVIEW – COLLAPSIBLE */}
-        <div
-          className={`mb-16 transition-all duration-1000 delay-600 ${
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-          }`}
-        >
+        {/* ADD YOUR REVIEW – KEEPING THIS WORKING */}
+        <div className="mb-16">
           {!showReviewForm ? (
             <div className="flex justify-center">
               <Button
@@ -636,7 +600,7 @@ const Testimonials = () => {
                 }}
                 className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-xl shadow-lg"
               >
-                Add Review
+                Write a Review
               </Button>
             </div>
           ) : (
@@ -658,8 +622,8 @@ const Testimonials = () => {
                 </button>
               </div>
               <p className="text-slate-600 text-sm lg:text-base mb-6">
-                Have you worked with Wasi Estate &amp; Builders? Leave a review
-                and help others make confident property decisions.
+                Have you worked with Wasi Estate &amp; Builders in Lahore? Leave
+                a review and help others make confident property decisions.
               </p>
 
               <form onSubmit={handleSubmitReview} className="space-y-4">
@@ -695,7 +659,7 @@ const Testimonials = () => {
                         }))
                       }
                       className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                      placeholder="e.g. Buyer, Seller"
+                      placeholder="e.g. Buyer, Seller, Investor"
                     />
                   </div>
                 </div>
@@ -828,12 +792,8 @@ const Testimonials = () => {
           )}
         </div>
 
-        {/* GOOGLE REVIEWS CTA */}
-        <div
-          className={`transition-all duration-1000 delay-700 ${
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-          }`}
-        >
+        {/* GOOGLE REVIEWS CTA (kept as in your original) */}
+        <div>
           <div className="bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden">
             <div className="grid lg:grid-cols-2">
               {/* Left: Google Rating */}
@@ -853,7 +813,7 @@ const Testimonials = () => {
                 </div>
 
                 <div className="flex items-center gap-1 mb-6">
-                  {[...Array(5)].map((_, i) => (
+                  {Array.from({ length: 5 }).map((_, i) => (
                     <Star
                       key={i}
                       className="h-8 w-8 text-yellow-400 fill-yellow-400"
@@ -897,7 +857,8 @@ const Testimonials = () => {
                 </h3>
                 <p className="text-green-100 mb-6 leading-relaxed">
                   Let us help you find your dream property or sell your existing
-                  one with our proven track record and transparent approach.
+                  one with our proven track record and transparent approach in
+                  Lahore.
                 </p>
                 <div className="flex flex-wrap gap-3">
                   <Button
@@ -919,7 +880,7 @@ const Testimonials = () => {
           </div>
         </div>
 
-        {/* TRUST LOCATIONS */}
+        {/* TRUST LOCATIONS (optional, kept) */}
         <div className="mt-12 lg:mt-16 text-center">
           <p className="text-slate-500 mb-6 font-medium text-sm uppercase tracking-wider">
             Serving Premium Locations Across Pakistan
@@ -927,7 +888,7 @@ const Testimonials = () => {
           <div className="flex flex-wrap justify-center items-center gap-3 lg:gap-4">
             {[
               "DHA Lahore",
-              "Bahria Town",
+              "Bahria Town Lahore",
               "Gulberg",
               "E-11 Islamabad",
               "Model Town",

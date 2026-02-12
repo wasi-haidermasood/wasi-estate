@@ -62,34 +62,20 @@ type HeroConfig = {
   };
 };
 
-// Fallback static slides
-const HERO_SLIDES: HeroSlide[] = [
-  {
-    id: 1,
-    image:
-      "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
-    title: "Premium Commercial Spaces",
-    subtitle: "Expand your business in the heart of the city",
-  },
-  {
-    id: 2,
-    image:
-      "https://images.unsplash.com/photo-1613490493576-7fde63acd811?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
-    title: "Exclusive Residential Estates",
-    subtitle: "Living redefined with world-class amenities",
-  },
-  {
-    id: 3,
-    image:
-      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
-    title: "Investment Opportunities",
-    subtitle: "Secure high ROI with our verified projects",
-  },
-];
-
 interface RealEstateHeroProps {
   onSearchResults?: (properties: Property[]) => void;
 }
+
+// ===== VERY GENERIC PLACEHOLDER SLIDE (only used if backend /hero not configured) =====
+const PLACEHOLDER_SLIDES: HeroSlide[] = [
+  {
+    id: "placeholder-1",
+    image:
+      "https://via.placeholder.com/1920x1080?text=Hero+Image+Placeholder",
+    title: "",
+    subtitle: "",
+  },
+];
 
 const RealEstateHero: React.FC<RealEstateHeroProps> = ({ onSearchResults }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -108,21 +94,25 @@ const RealEstateHero: React.FC<RealEstateHeroProps> = ({ onSearchResults }) => {
     const fetchHeroConfig = async () => {
       try {
         const res = await fetch(`${API_BASE}/hero`);
+        if (!res.ok) {
+          throw new Error("Failed to load hero config");
+        }
         const data: HeroConfig = await res.json();
         setHeroConfig(data);
       } catch (error) {
         console.error("Failed to load hero config:", error);
+        // keep null -> we will use placeholder
       }
     };
 
     fetchHeroConfig();
   }, []);
 
-  // Choose slides: backend first, then fallback
+  // Choose slides: backend first, then very generic placeholder
   const slides: HeroSlide[] =
     heroConfig?.slides && heroConfig.slides.length > 0
       ? heroConfig.slides
-      : HERO_SLIDES;
+      : PLACEHOLDER_SLIDES;
 
   const slideCount = slides.length;
 
@@ -146,10 +136,8 @@ const RealEstateHero: React.FC<RealEstateHeroProps> = ({ onSearchResults }) => {
       ?.scrollIntoView({ behavior: "smooth" });
   };
 
-  // Subtitle suffix from config
-  const subtitleSuffix =
-    heroConfig?.header?.subtitleSuffix ??
-    "We connect you with the most prestigious properties.";
+  // Subtitle suffix from config (no hard-coded marketing line)
+  const subtitleSuffix = heroConfig?.header?.subtitleSuffix ?? "";
 
   // Trust badge config
   const trustBadge = heroConfig?.trustBadge;
@@ -169,7 +157,7 @@ const RealEstateHero: React.FC<RealEstateHeroProps> = ({ onSearchResults }) => {
 
   const whatsappLink = cta?.whatsappNumber
     ? `https://wa.me/${cta.whatsappNumber}`
-    : "https://wa.me/923214710692";
+    : "https://wa.me/923214710692"; // generic fallback number
 
   // Search handler
   const handleSearch = async () => {
@@ -181,13 +169,12 @@ const RealEstateHero: React.FC<RealEstateHeroProps> = ({ onSearchResults }) => {
         priceRange,
       });
 
-      const res = await fetch(
-        `${API_BASE}/properties?${params.toString()}`
-      );
+      const res = await fetch(`${API_BASE}/properties?${params.toString()}`);
+      if (!res.ok) throw new Error("Search request failed");
       const data = await res.json();
 
       // Map API data to Property[] shape that PropertiesSection expects
-      const mapped: Property[] = data.items.map((item) => ({
+      const mapped: Property[] = (data.items || []).map((item) => ({
         id: item.id,
         title: item.title,
         location: `${item.location}, ${item.city}`,
@@ -238,38 +225,43 @@ const RealEstateHero: React.FC<RealEstateHeroProps> = ({ onSearchResults }) => {
           <div className="grid lg:grid-cols-12 gap-6 lg:gap-12 items-center lg:items-end">
             {/* ----- LEFT: Headlines ----- */}
             <div className="lg:col-span-7 xl:col-span-8 space-y-4 lg:space-y-6 text-center lg:text-left">
-              {/* Trust Badge (dynamic) */}
-              <div className="flex justify-center lg:justify-start">
-                <span
-                  className="inline-flex items-center gap-2 py-1.5 px-4 rounded-full backdrop-blur-sm font-bold tracking-wider uppercase text-[10px] lg:text-xs"
-                  style={{
-                    backgroundColor:
-                      trustBadge?.bgColor ?? "rgba(234,179,8,0.2)",
-                    border: `1px solid ${
-                      trustBadge?.borderColor ?? "rgba(234,179,8,0.4)"
-                    }`,
-                    color: trustBadge?.textColor ?? "#facc15",
-                  }}
-                >
+              {/* Trust Badge (only if backend provides text) */}
+              {trustBadge?.text && (
+                <div className="flex justify-center lg:justify-start">
                   <span
-                    className="w-2 h-2 rounded-full animate-pulse"
-                    style={{ backgroundColor: trustBadge?.dotColor ?? "#facc15" }}
-                  />
-                  {trustBadge?.text ?? "Since 2013 • Trusted Partner"}
-                </span>
-              </div>
+                    className="inline-flex items-center gap-2 py-1.5 px-4 rounded-full backdrop-blur-sm font-bold tracking-wider uppercase text-[10px] lg:text-xs"
+                    style={{
+                      backgroundColor:
+                        trustBadge.bgColor || "rgba(234,179,8,0.2)",
+                      border: `1px solid ${
+                        trustBadge.borderColor || "rgba(234,179,8,0.4)"
+                      }`,
+                      color: trustBadge.textColor || "#facc15",
+                    }}
+                  >
+                    <span
+                      className="w-2 h-2 rounded-full animate-pulse"
+                      style={{
+                        backgroundColor: trustBadge.dotColor || "#facc15",
+                      }}
+                    />
+                    {trustBadge.text}
+                  </span>
+                </div>
+              )}
 
-              {/* Title (dynamic slide) */}
+              {/* Title (from slide or placeholder) */}
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-white leading-[1.1] tracking-tight">
                 {slides[currentSlide]?.title}
               </h1>
 
-              {/* Subtitle + suffix */}
+              {/* Subtitle + suffix (backend or placeholder) */}
               <p className="text-sm sm:text-base lg:text-lg xl:text-xl text-gray-300 max-w-xl mx-auto lg:mx-0 font-light leading-relaxed">
-                {slides[currentSlide]?.subtitle}. {subtitleSuffix}
+                {slides[currentSlide]?.subtitle}
+                {subtitleSuffix ? ` ${subtitleSuffix}` : ""}
               </p>
 
-              {/* Slide Indicators (dynamic) */}
+              {/* Slide Indicators */}
               <div className="flex items-center justify-center lg:justify-start gap-2 pt-2">
                 {slides.map((_, idx) => (
                   <button
@@ -285,7 +277,7 @@ const RealEstateHero: React.FC<RealEstateHeroProps> = ({ onSearchResults }) => {
                 ))}
               </div>
 
-              {/* Desktop Only Buttons (dynamic text + video link) */}
+              {/* Desktop Only Buttons */}
               <div className="hidden lg:flex gap-4 pt-4">
                 <Button
                   variant="outline"
@@ -308,30 +300,31 @@ const RealEstateHero: React.FC<RealEstateHeroProps> = ({ onSearchResults }) => {
             {/* ----- RIGHT: CTA Card ----- */}
             <div className="lg:col-span-5 xl:col-span-4 w-full max-w-md mx-auto lg:mx-0 lg:max-w-none">
               <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
-                {/* Card Header (dynamic) */}
+                {/* Card Header */}
                 <div className="bg-slate-900 px-4 py-3 lg:px-6 lg:py-4 flex items-center justify-between">
                   <div>
                     <h3 className="text-base lg:text-xl font-bold text-white">
-                      {cta?.title ?? "Buy or Sell Property?"}
+                      {cta?.title ?? "Hero CTA Title (set in admin)"}
                     </h3>
                     <p className="text-xs lg:text-sm text-gray-400">
-                      {cta?.subtitle ?? "Free consultation available"}
+                      {cta?.subtitle ??
+                        "This CTA text will be managed from your Hero settings."}
                     </p>
                   </div>
                   <div className="bg-yellow-500 text-slate-900 px-2 py-1 rounded text-[10px] lg:text-xs font-bold">
-                    {cta?.highlightText ?? "1% ONLY"}
+                    {cta?.highlightText ?? "Highlight"}
                   </div>
                 </div>
 
                 {/* Card Body */}
                 <div className="p-4 lg:p-6 space-y-3 lg:space-y-4">
-                  {/* Primary CTA (dynamic text) */}
+                  {/* Primary CTA */}
                   <Button
                     onClick={scrollToContact}
                     className="w-full bg-green-600 hover:bg-green-700 text-white h-11 lg:h-14 text-sm lg:text-base font-bold shadow-lg group"
                   >
                     <Phone className="w-4 h-4 mr-2 group-hover:animate-bounce" />
-                    {cta?.primaryButtonText ?? "Request Call Back"}
+                    {cta?.primaryButtonText ?? "Primary CTA"}
                   </Button>
 
                   {/* Secondary CTAs */}
@@ -349,11 +342,11 @@ const RealEstateHero: React.FC<RealEstateHeroProps> = ({ onSearchResults }) => {
                       className="h-10 lg:h-12 text-xs lg:text-sm font-bold border-slate-200"
                     >
                       <Mail className="w-3 h-3 lg:w-4 lg:h-4 mr-1.5" />
-                      {cta?.secondaryButtonText ?? "List Property"}
+                      {cta?.secondaryButtonText ?? "Secondary CTA"}
                     </Button>
                   </div>
 
-                  {/* Trust Indicators (dynamic counts/labels) */}
+                  {/* Trust Indicators */}
                   <div className="flex items-center justify-between pt-3 lg:pt-4 border-t border-slate-100">
                     <div className="flex items-center gap-2">
                       <div className="flex -space-x-2">
@@ -368,7 +361,7 @@ const RealEstateHero: React.FC<RealEstateHeroProps> = ({ onSearchResults }) => {
                       </div>
                       <span className="text-[10px] lg:text-xs text-slate-600">
                         <strong className="text-slate-900">
-                          {cta?.agentsCount ?? 12}+
+                          {cta?.agentsCount ?? 0}+
                         </strong>{" "}
                         {cta?.agentsLabel ?? "Agents"}
                       </span>
@@ -530,22 +523,20 @@ const RealEstateHero: React.FC<RealEstateHeroProps> = ({ onSearchResults }) => {
                   </div>
                 </div>
 
-                {/* Quick Links */}
+                {/* Quick Links – very generic placeholders */}
                 <div className="flex items-center gap-4 mt-4 pt-4 border-t border-gray-100">
                   <span className="text-xs font-bold text-gray-400">
                     Popular:
                   </span>
-                  {["DHA Lahore", "Bahria Town", "E-11 Islamabad", "Clifton"].map(
-                    (loc) => (
-                      <button
-                        key={loc}
-                        className="text-xs font-medium text-slate-600 hover:text-yellow-600 flex items-center gap-1 transition-colors"
-                        onClick={() => setLocation(loc)}
-                      >
-                        {loc} <ChevronRight className="w-3 h-3" />
-                      </button>
-                    )
-                  )}
+                  {["Area 1", "Area 2", "Area 3", "Area 4"].map((loc) => (
+                    <button
+                      key={loc}
+                      className="text-xs font-medium text-slate-600 hover:text-yellow-600 flex items-center gap-1 transition-colors"
+                      onClick={() => setLocation(loc)}
+                    >
+                      {loc} <ChevronRight className="w-3 h-3" />
+                    </button>
+                  ))}
                 </div>
               </div>
             </div>

@@ -1,4 +1,3 @@
-// src/pages/BlogListPage.tsx
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
@@ -97,12 +96,40 @@ const BlogListPage: React.FC = () => {
     );
   }
 
+  // use the first post as hero (same behavior as home)
+  const heroPost = posts[0];
+
   return (
     <div className="min-h-screen bg-slate-50">
       <Navigation />
 
       <main className="py-8 lg:py-10">
         <div className="max-w-5xl mx-auto px-4">
+          {/* Hero banner for blog page using same coverImage logic */}
+          {heroPost?.coverImage && (
+            <div className="mb-6 sm:mb-8 rounded-2xl overflow-hidden relative h-40 sm:h-52 lg:h-60">
+              <img
+                src={heroPost.coverImage}
+                alt={heroPost.title}
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-black/10" />
+              <div className="absolute inset-0 flex flex-col justify-center px-5 sm:px-8">
+                <p className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.18em] text-emerald-300 mb-1">
+                  Wasi Estate Blog
+                </p>
+                <h1 className="text-lg sm:text-2xl lg:text-3xl font-bold text-white max-w-xl line-clamp-2">
+                  {heroPost.title}
+                </h1>
+                <p className="text-xs sm:text-sm text-slate-200 mt-1 max-w-lg line-clamp-2">
+                  This hero image is controlled by the cover image of your latest
+                  published blog post in the Blog CMS.
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* Header */}
           <header className="mb-6 sm:mb-8">
             <div className="flex items-center justify-between gap-2">
@@ -110,9 +137,9 @@ const BlogListPage: React.FC = () => {
                 <p className="text-[11px] uppercase tracking-[0.18em] text-emerald-600 font-semibold">
                   Blog &amp; Insights
                 </p>
-                <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 mt-1">
+                <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mt-1">
                   Wasi Estate Blog
-                </h1>
+                </h2>
                 <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-md">
                   Articles and guides on buying, selling, investing and building
                   properties in Pakistan.

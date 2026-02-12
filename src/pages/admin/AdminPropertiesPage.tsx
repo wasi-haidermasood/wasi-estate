@@ -7,10 +7,9 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { API_BASE } from "@/lib/config";
 
-
 interface Property {
-  _id?: string; // Mongo ID
-  id?: string; // custom ID like "prop-1"
+  _id?: string;
+  id?: string;
   title: string;
   city: string;
   location: string;
@@ -22,12 +21,11 @@ interface Property {
   area?: string;
   image?: string;
 
-  // NEW SEO fields
+  images?: string[]; // additional images
+
   seoTitle?: string;
   seoDescription?: string;
   seoImage?: string;
-
-  // NEW long description field
   descriptionHtml?: string;
 }
 
@@ -46,6 +44,7 @@ const emptyProperty: Property = {
   baths: 0,
   area: "",
   image: "",
+  images: [],
   seoTitle: "",
   seoDescription: "",
   seoImage: "",
@@ -94,7 +93,7 @@ const AdminPropertiesPage: React.FC = () => {
         setError(null);
       } catch (err) {
         console.error(err);
-        setError(err.message || "Failed to load properties");
+        setError(err?.message || "Failed to load properties");
       } finally {
         setLoading(false);
       }
@@ -112,6 +111,15 @@ const AdminPropertiesPage: React.FC = () => {
         const num = parseInt(value, 10);
         return { ...prev, [field]: isNaN(num) ? 0 : num } as Property;
       }
+
+      if (field === "images") {
+        const arr = value
+          .split("\n")
+          .map((v) => v.trim())
+          .filter(Boolean);
+        return { ...prev, images: arr } as Property;
+      }
+
       return { ...prev, [field]: value } as Property;
     });
   };
@@ -152,7 +160,7 @@ const AdminPropertiesPage: React.FC = () => {
       setSuccess("Property created successfully");
     } catch (err) {
       console.error(err);
-      setError(err.message || "Failed to create property");
+      setError(err?.message || "Failed to create property");
     } finally {
       setCreating(false);
     }
@@ -171,6 +179,12 @@ const AdminPropertiesPage: React.FC = () => {
       if (field === "price" || field === "beds" || field === "baths") {
         const num = parseInt(value, 10);
         (prop as Record<string, unknown>)[field] = isNaN(num) ? 0 : num;
+      } else if (field === "images") {
+        const arr = value
+          .split("\n")
+          .map((v) => v.trim())
+          .filter(Boolean);
+        (prop as Property).images = arr;
       } else {
         (prop as Record<string, unknown>)[field] = value;
       }
@@ -222,7 +236,7 @@ const AdminPropertiesPage: React.FC = () => {
       setSuccess("Property updated successfully");
     } catch (err) {
       console.error(err);
-      setError(err.message || "Failed to save property");
+      setError(err?.message || "Failed to save property");
     } finally {
       setSavingId(null);
     }
@@ -266,7 +280,7 @@ const AdminPropertiesPage: React.FC = () => {
       setSuccess("Property deleted successfully");
     } catch (err) {
       console.error(err);
-      setError(err.message || "Failed to delete property");
+      setError(err?.message || "Failed to delete property");
     } finally {
       setDeletingId(null);
     }
@@ -395,13 +409,26 @@ const AdminPropertiesPage: React.FC = () => {
                 />
               </div>
               <div className="space-y-1">
-                <Label className="text-xs">Image URL</Label>
+                <Label className="text-xs">Main Image URL</Label>
                 <Input
                   className="text-sm"
                   value={newProperty.image || ""}
                   onChange={(e) => handleNewChange("image", e.target.value)}
                 />
               </div>
+            </div>
+
+            <div className="space-y-1">
+              <Label className="text-xs">
+                Additional Image URLs (one per line)
+              </Label>
+              <Textarea
+                className="text-xs"
+                rows={2}
+                value={(newProperty.images || []).join("\n")}
+                onChange={(e) => handleNewChange("images", e.target.value)}
+                placeholder="https://... (one per line)"
+              />
             </div>
 
             <div className="grid gap-2 md:grid-cols-3">
@@ -567,7 +594,7 @@ const AdminPropertiesPage: React.FC = () => {
                       />
                     </div>
                     <div className="space-y-1">
-                      <Label className="text-[11px]">Image URL</Label>
+                      <Label className="text-[11px]">Main Image URL</Label>
                       <Input
                         className="text-xs"
                         value={prop.image || ""}
@@ -578,7 +605,22 @@ const AdminPropertiesPage: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="grid gap-2 md:grid-cols-3">
+                  <div className="space-y-1 mt-1">
+                    <Label className="text-[11px]">
+                      Additional Image URLs (one per line)
+                    </Label>
+                    <Textarea
+                      className="text-[11px]"
+                      rows={2}
+                      value={(prop.images || []).join("\n")}
+                      onChange={(e) =>
+                        handlePropertyChange(index, "images", e.target.value)
+                      }
+                      placeholder="https://... (one per line)"
+                    />
+                  </div>
+
+                  <div className="grid gap-2 md:grid-cols-3 mt-2">
                     <div className="space-y-1">
                       <Label className="text-[11px]">Beds</Label>
                       <Input
@@ -673,7 +715,9 @@ const AdminPropertiesPage: React.FC = () => {
 
                   {/* Long Description */}
                   <section className="border border-slate-200 rounded-lg p-3 space-y-1 mt-2">
-                    <Label className="text-xs">Long Description / Details</Label>
+                    <Label className="text-xs">
+                      Long Description / Details
+                    </Label>
                     <Textarea
                       className="text-xs"
                       rows={4}

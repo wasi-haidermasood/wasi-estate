@@ -5,7 +5,6 @@ import Footer from "@/components/Footer";
 import { BedDouble, Bath, MapPin, Building2, Phone } from "lucide-react";
 import { API_BASE } from "@/lib/config";
 
-
 interface Property {
   _id: string;
   id?: string;
@@ -19,6 +18,7 @@ interface Property {
   baths?: number;
   area?: string;
   image?: string;
+  images?: string[]; // NEW
   createdAt?: string;
   updatedAt?: string;
 
@@ -80,6 +80,7 @@ const PropertyDetailPage: React.FC = () => {
   const [property, setProperty] = useState<Property | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [activeImageIndex, setActiveImageIndex] = useState(0); // NEW
 
   useEffect(() => {
     if (!id) return;
@@ -97,9 +98,11 @@ const PropertyDetailPage: React.FC = () => {
         const data: Property = await res.json();
         setProperty(data);
         setError(null);
-      } catch (err ) {
+      } catch (err) {
         console.error(err);
-        setError(err.message || "Failed to load property");
+        const message =
+          err instanceof Error ? err.message : "Failed to load property";
+        setError(message);
       } finally {
         setLoading(false);
       }
@@ -207,6 +210,14 @@ const PropertyDetailPage: React.FC = () => {
       : property.location
     : property.city || "";
 
+  // NEW: build full images array (gallery)
+  const images =
+    property.images && property.images.length > 0
+      ? property.images
+      : property.image
+      ? [property.image]
+      : [];
+
   const createdDate = property.createdAt
     ? new Date(property.createdAt).toLocaleDateString()
     : null;
@@ -241,13 +252,38 @@ const PropertyDetailPage: React.FC = () => {
           </div>
 
           <article className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
-            {property.image && (
-              <div className="w-full h-56 md:h-72 lg:h-80 overflow-hidden">
-                <img
-                  src={property.image}
-                  alt={property.title}
-                  className="w-full h-full object-cover"
-                />
+            {/* NEW: gallery (main image + thumbnails) */}
+            {images.length > 0 && (
+              <div className="w-full">
+                <div className="w-full h-56 md:h-72 lg:h-80 overflow-hidden">
+                  <img
+                    src={images[activeImageIndex]}
+                    alt={property.title}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                {images.length > 1 && (
+                  <div className="flex gap-2 p-3 border-t border-slate-100 overflow-x-auto">
+                    {images.map((imgUrl, idx) => (
+                      <button
+                        key={imgUrl + idx}
+                        type="button"
+                        onClick={() => setActiveImageIndex(idx)}
+                        className={`relative h-16 w-24 rounded-md overflow-hidden border ${
+                          idx === activeImageIndex
+                            ? "border-green-600"
+                            : "border-slate-200"
+                        }`}
+                      >
+                        <img
+                          src={imgUrl}
+                          alt={`${property.title} image ${idx + 1}`}
+                          className="w-full h-full object-cover"
+                        />
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
 

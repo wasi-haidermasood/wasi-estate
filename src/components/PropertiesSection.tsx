@@ -1,21 +1,15 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import {
-  Home,
-  MapPin,
-  BedDouble,
-  Bath,
-  Building2,
-} from "lucide-react";
+import { Home, MapPin, BedDouble, Bath, Building2 } from "lucide-react";
 import type { Property } from "@/types/property";
 import { API_BASE } from "@/lib/config";
-
 
 interface PropertiesSectionProps {
   properties?: Property[]; // passed from search, optional
 }
 
+// You can keep these as sample/fallback data
 const fallbackProperties: Property[] = [
   {
     _id: "fallback-1",
@@ -56,7 +50,6 @@ const fallbackProperties: Property[] = [
   },
 ];
 
-
 function formatPKR(amount: number): string {
   if (!amount && amount !== 0) return "";
   return `PKR ${amount.toLocaleString("en-PK")}`;
@@ -69,6 +62,7 @@ const PropertiesSection: React.FC<PropertiesSectionProps> = ({
     null
   );
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   // Load from backend when no search results
   useEffect(() => {
@@ -81,7 +75,7 @@ const PropertiesSection: React.FC<PropertiesSectionProps> = ({
         if (!res.ok) throw new Error("Failed to load properties");
         const data = await res.json();
 
-        const mapped: Property[] = (data.items || []).map((p) => ({
+        const mapped: Property[] = (data.items || []).map((p ) => ({
           _id: p._id,
           id: p._id || p.id, // use Mongo _id for routing if available
           title: p.title,
@@ -144,7 +138,6 @@ const PropertiesSection: React.FC<PropertiesSectionProps> = ({
             for serious buyers and investors.
           </p>
         </div>
-        
 
         {/* Properties Grid */}
         <div className="max-w-6xl mx-auto">
@@ -157,12 +150,16 @@ const PropertiesSection: React.FC<PropertiesSectionProps> = ({
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-7">
             {propertiesToShow.map((property) => {
               const detailId = (property._id ?? property.id)?.toString();
-              const canViewDetails = !!detailId;
+              const detailPath = detailId ? `/properties/${detailId}` : null;
+              const canViewDetails = !!detailPath;
 
               return (
                 <article
                   key={property._id || property.id}
-                  className="group rounded-xl bg-white border border-slate-200 hover:border-green-500/80 transition-colors shadow-sm hover:shadow-md overflow-hidden"
+                  onClick={() => {
+                    if (detailPath) navigate(detailPath);
+                  }}
+                  className="group rounded-xl bg-white border border-slate-200 hover:border-green-500/80 transition-colors shadow-sm hover:shadow-md overflow-hidden cursor-pointer"
                 >
                   {/* Image */}
                   <div className="relative h-44 md:h-48 lg:h-52 overflow-hidden">
@@ -222,41 +219,35 @@ const PropertiesSection: React.FC<PropertiesSectionProps> = ({
                       )}
                     </div>
 
-                    {canViewDetails ? (
-                      <Link to={`/properties/${detailId}`}>
-                        <Button
-                          variant="outline"
-                          className="w-full h-9 text-xs md:text-sm font-semibold border-green-600 text-green-700 hover:bg-green-600 hover:text-white hover:border-green-600 transition-colors"
-                        >
-                          View Details
-                        </Button>
-                      </Link>
-                    ) : (
-                      <Button
-                        variant="outline"
-                        disabled
-                        className="w-full h-9 text-xs md:text-sm font-semibold border-slate-200 text-slate-400"
-                      >
-                        View Details
-                      </Button>
-                    )}
+                    <Button
+                      variant="outline"
+                      className="w-full h-9 text-xs md:text-sm font-semibold border-green-600 text-green-700 hover:bg-green-600 hover:text-white hover:border-green-600 transition-colors"
+                      disabled={!canViewDetails}
+                      onClick={(e) => {
+                        e.stopPropagation(); // prevent article click from firing twice
+                        if (detailPath) navigate(detailPath);
+                      }}
+                    >
+                      {canViewDetails ? "View Details" : "View Details"}
+                    </Button>
                   </div>
                 </article>
               );
-              
             })}
           </div>
         </div>
+
+        {/* View all button */}
         <div className="mt-4 flex justify-center">
-  <Link to="/properties">
-    <Button
-      variant="outline"
-      className="h-9 text-xs md:text-sm font-semibold border-green-600 text-green-700 hover:bg-green-600 hover:text-white hover:border-green-600 transition-colors"
-    >
-      View All Properties
-    </Button>
-  </Link>
-</div>
+          <Link to="/properties">
+            <Button
+              variant="outline"
+              className="h-9 text-xs md:text-sm font-semibold border-green-600 text-green-700 hover:bg-green-600 hover:text-white hover:border-green-600 transition-colors"
+            >
+              View All Properties
+            </Button>
+          </Link>
+        </div>
       </div>
     </section>
   );
