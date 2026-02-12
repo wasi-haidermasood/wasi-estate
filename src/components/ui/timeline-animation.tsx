@@ -40,7 +40,7 @@ export const TimelineContent = <T extends keyof HTMLElementTagNameMap = "div">({
   };
 
   const sequenceVariants = customVariants || defaultSequenceVariants;
-  // eslint-disable-next-line react-hooks/rules-of-hooks
+
   const isInView = useInView(timelineRef, { once, margin: "-100px" });
   const MotionComponent = motion[as || "div"] as React.ElementType;
 
