@@ -70,31 +70,31 @@ const Portfolio = () => {
               </h3>
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                 You own a house, plot, commercial unit or farmhouse and want to
-                sell it with maximum price, minimum headache and **legal safety**.
+                sell it with maximum price, minimum headache and legal safety.
               </p>
 
               <ul className="space-y-1.5 text-xs sm:text-sm text-slate-700 mt-2">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-green-600" />
-                  Proper **property valuation** &amp; market pricing
+                  Proper property valuation &amp; market pricing
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-green-600" />
-                  Professional **listing &amp; marketing** of your property
+                  Professional listing &amp; marketing of your property
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-green-600" />
-                  **Screened buyers** – only serious &amp; verified clients
+                  Screened buyers – only serious &amp; verified clients
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-green-600" />
-                  **Documentation &amp; transfer** handled end‑to‑end
+                  Documentation &amp; transfer handled end‑to‑end
                 </li>
               </ul>
 
               <div className="mt-3">
                 <Badge className="bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] px-2 py-0.5">
-                  Only 1% Commission · Transparent &amp; documented deal
+                  Only 2% Commission · Transparent &amp; documented deal
                 </Badge>
               </div>
 
@@ -131,26 +131,26 @@ const Portfolio = () => {
               </h3>
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                 You want to buy a house, plot, apartment or commercial unit and
-                want someone **on your side** to protect your money and guide you
+                want someone on your side to protect your money and guide you
                 to the right option.
               </p>
 
               <ul className="space-y-1.5 text-xs sm:text-sm text-slate-700 mt-2">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-green-600" />
-                  **Verified listings** – we avoid risky / disputed properties
+                  Verified listings – we avoid risky / disputed properties
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-green-600" />
-                  Options according to your **budget &amp; location**
+                  Options according to your budget &amp; location
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-green-600" />
-                  **Negotiation** handled by experienced team
+                  Negotiation handled by experienced team
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-green-600" />
-                  Full **documentation &amp; transfer** support
+                  Full documentation &amp; transfer support
                 </li>
               </ul>
 
@@ -194,26 +194,26 @@ const Portfolio = () => {
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                 You&apos;re a property owner, investor or dealer with inventory
                 (plots, houses, commercials) and want to list your properties
-                with a **professional, reputed** agency in Al‑Faisal Town /
+                with a professional, reputed agency in Al‑Faisal Town /
                 Lahore.
               </p>
 
               <ul className="space-y-1.5 text-xs sm:text-sm text-slate-700 mt-2">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-green-600" />
-                  Property listing with **photos, details and pricing**
+                  Property listing with photos, details and pricing
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-green-600" />
-                  Access to **200+ partner dealers** network
+                  Access to 200+ partner dealers network
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-green-600" />
-                  We bring **serious buyers &amp; tenants** to you
+                  We bring serious buyers &amp; tenants to you
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-green-600" />
-                  Fair, transparent **1% commission** policy
+                  Fair, transparent 2% Commission policy
                 </li>
               </ul>
 
@@ -260,7 +260,7 @@ const Portfolio = () => {
             <div className="space-y-1.5 text-xs sm:text-sm text-slate-700">
               <div className="flex items-center gap-2">
                 <Shield className="w-4 h-4 text-green-600" />
-                <span>Honest guidance and transparent 1% commission policy</span>
+                <span>Honest guidance and transparent 2% Commission policy</span>
               </div>
               <div className="flex items-center gap-2">
                 <MapPin className="w-4 h-4 text-green-600" />

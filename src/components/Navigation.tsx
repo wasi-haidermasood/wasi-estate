@@ -593,46 +593,51 @@ const Navigation = () => {
           <div className="container mx-auto px-4">
             <div className="flex items-center justify-between">
               {/* Logo */}
-              <a
-                href="/"
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleNavClick("/");
-                }}
-                className="flex items-center gap-2.5 group z-50 relative"
-              >
-                <div
-                  className={`${
-                    isScrolled ? "w-9 h-9" : "w-10 h-10 lg:w-11 lg:h-11"
-                  } bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-lg flex items-center justify-center shadow-lg group-hover:from-green-600 group-hover:to-green-700 transition-all duration-300`}
-                >
-                  {logoImage ? (
-                    <img
-                      src={logoImage}
-                      alt={logoAlt}
-                      className="w-7 h-7 object-contain"
-                    />
-                  ) : (
-                    <LogoIcon
-                      className={`${
-                        isScrolled ? "w-5 h-5" : "w-5 h-5 lg:w-6 lg:h-6"
-                      } transition-all`}
-                    />
-                  )}
-                </div>
-                <div className="leading-tight">
-                  <h1
-                    className={`${
-                      isScrolled ? "text-base lg:text-lg" : "text-lg lg:text-xl"
-                    } font-bold text-slate-900 tracking-tight transition-all`}
-                  >
-                    {logoName}
-                  </h1>
-                  <p className="text-[8px] lg:text-[9px] font-bold text-green-600 uppercase tracking-[0.2em]">
-                    {logoTagline}
-                  </p>
-                </div>
-              </a>
+<a
+  href="/"
+  onClick={(e) => {
+    e.preventDefault();
+    handleNavClick("/");
+  }}
+  className="flex items-center gap-2.5 group z-50 relative"
+>
+  {logoImage ? (
+    // When a logo image is set: show plain PNG, no dark box
+    <img
+      src={logoImage}
+      alt={logoAlt}
+      className={`${
+        isScrolled ? "h-9" : "h-10 lg:h-11"
+      } w-auto object-contain transition-all`}
+    />
+  ) : (
+    // When no image: use the original gradient icon box
+    <div
+      className={`${
+        isScrolled ? "w-9 h-9" : "w-10 h-10 lg:w-11 lg:h-11"
+      } bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-lg flex items-center justify-center shadow-lg group-hover:from-green-600 group-hover:to-green-700 transition-all duration-300`}
+    >
+      <LogoIcon
+        className={`${
+          isScrolled ? "w-5 h-5" : "w-5 h-5 lg:w-6 lg:h-6"
+        } transition-all`}
+      />
+    </div>
+  )}
+
+  <div className="leading-tight">
+    <h1
+      className={`${
+        isScrolled ? "text-base lg:text-lg" : "text-lg lg:text-xl"
+      } font-bold text-slate-900 tracking-tight transition-all`}
+    >
+      {logoName}
+    </h1>
+    <p className="text-[8px] lg:text-[9px] font-bold text-green-600 uppercase tracking-[0.2em]">
+      {logoTagline}
+    </p>
+  </div>
+</a>
 
               {/* Desktop Menu */}
               <div className="hidden lg:flex items-center gap-0.5">
